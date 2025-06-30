@@ -1,28 +1,25 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Recipe.Backend.Data;
+using Recipe.Backend.ServiceDefaults;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddDbContext<RecipeContext>(options =>
     options.UseInMemoryDatabase("RecipeDb"));
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Recipe API", Version = "v1" });
-});
+builder.Services.AddScalarApiExplorer();
 
 var app = builder.Build();
+
+app.UseServiceDefaults();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recipe API v1");
-    });
+    app.UseScalarApiReference();
 }
 
 app.UseHttpsRedirection();
